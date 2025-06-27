@@ -1,0 +1,86 @@
+<html><head>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Lexend%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      :root {
+        --primary-color: #117de3;
+      }
+    </style>
+</head>
+<body class="bg-gray-50">
+<div class="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden" style='font-family: Lexend, "Noto Sans", sans-serif;'>
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-gray-200 px-10 py-4 bg-white shadow-sm">
+<div class="flex items-center gap-3 text-gray-800">
+<div class="p-1 rounded-md bg-[var(--primary-color)] text-white">
+<svg class="size-6" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M2 17L12 22L22 17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M2 12L12 17L22 12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h2 class="text-gray-800 text-xl font-bold leading-tight tracking-tight">EduQuest</h2>
+</div>
+<nav class="flex items-center gap-8">
+<a class="text-gray-600 hover:text-[var(--primary-color)] text-sm font-medium leading-normal transition-colors" href="#">Beranda</a>
+<a class="text-gray-600 hover:text-[var(--primary-color)] text-sm font-medium leading-normal transition-colors" href="#">Materi</a>
+<a class="text-[var(--primary-color)] text-sm font-semibold leading-normal" href="#">Kuis</a>
+<a class="text-gray-600 hover:text-[var(--primary-color)] text-sm font-medium leading-normal transition-colors" href="#">Nilai</a>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-gray-300 shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDfhy70nanEeK4cTOUYLGRSOT__RzvqIJ-yQhSkjq6CJ5ccXunObesIGc2tKHpSO-6FgjDUgvn88ldDRUsiBqlxJZMOGldzVj87dDB0BKZhnr-fvGsPpS5SwObzokIB-x1Inb8sFQS8sRiSlIMXzb9fXCB_dZFl6iWUhsmbT2x0kqsJBy5Yk5My2rvNgX_piMOiLeG0l_X2FX9ne4TRPK7MAS1sfstSWV7HevtUfOK0K9nO6UDwOgbRq3zRLkMQhQoUCQbuHsNcA_tP");'></div>
+</nav>
+</header>
+<main class="flex-1 py-10 px-4 sm:px-6 lg:px-8">
+<div class="mx-auto w-full max-w-2xl rounded-xl bg-white p-6 sm:p-8 shadow-lg">
+<div class="text-center mb-8">
+<h1 class="text-gray-800 text-3xl font-bold tracking-tight">Hasil Kuis Anda</h1>
+<p class="text-gray-500 mt-2">Selamat! Anda telah menyelesaikan kuis.</p>
+</div>
+<div class="mb-8 flex flex-col items-center">
+<div class="relative mb-6 size-40 rounded-full bg-gradient-to-br from-[var(--primary-color)] to-blue-400 flex items-center justify-center shadow-md">
+<div class="absolute inset-2 rounded-full bg-white"></div>
+<div class="relative z-10 text-center">
+<p class="text-gray-500 text-sm font-medium">Skor Akhir</p>
+<p class="text-[var(--primary-color)] text-5xl font-bold">85</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
+<div class="flex flex-col items-center gap-2 rounded-lg border border-gray-200 p-6 bg-green-50 text-green-700 shadow-sm hover:shadow-md transition-shadow">
+<svg class="size-8 mb-1 text-green-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<p class="text-base font-medium">Soal Benar</p>
+<p class="text-3xl font-bold">17</p>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-lg border border-gray-200 p-6 bg-red-50 text-red-700 shadow-sm hover:shadow-md transition-shadow">
+<svg class="size-8 mb-1 text-red-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<p class="text-base font-medium">Soal Salah</p>
+<p class="text-3xl font-bold">3</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="flex flex-1 items-center justify-center gap-2 rounded-lg h-12 px-6 bg-[var(--primary-color)] text-white text-sm font-semibold leading-normal tracking-wide shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary-color)] transition-colors">
+<svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                Tinjau Jawaban
+              </button>
+<button class="flex flex-1 items-center justify-center gap-2 rounded-lg h-12 px-6 bg-gray-100 text-gray-700 text-sm font-semibold leading-normal tracking-wide border border-gray-300 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors">
+<svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                Ulangi Kuis
+              </button>
+</div>
+</div>
+</main>
+<footer class="bg-gray-100 border-t border-gray-200 py-6 text-center">
+<p class="text-sm text-gray-500">© 2024 EduQuest. Hak Cipta Dilindungi.</p>
+</footer>
+</div>
+</div>
+
+</body></html>
