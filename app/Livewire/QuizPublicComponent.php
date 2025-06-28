@@ -12,19 +12,39 @@ class QuizPublicComponent extends Component
     public $totalQuestions;
     public $progress = 0;
 
+    public $selectedOption = null;
+    public $answers = [];
+
     public function mount()
     {
-        // Ambil semua soal berdasarkan quiz_id tertentu (misal: 1)
-        $this->questions = Question::with('options')->where('quiz_id', 1)->get();
+        $this->questions = Question::where('quiz_id', 1)->get();
         $this->totalQuestions = $this->questions->count();
         $this->calculateProgress();
     }
 
     public function nextQuestion()
     {
+        // Validasi: pastikan user memilih jawaban
+        if (is_null($this->selectedOption)) {
+            session()->flash('message', 'Silakan pilih salah satu jawaban terlebih dahulu.');
+            return;
+        }
+
+        // Simpan jawaban user
+        $this->answers[$this->questions[$this->currentQuestionIndex]->id] = $this->selectedOption;
+
+        // Reset pilihan
+        $this->selectedOption = null;
+
+        // Lanjut ke soal berikutnya
         if ($this->currentQuestionIndex < $this->totalQuestions - 1) {
             $this->currentQuestionIndex++;
             $this->calculateProgress();
+        } else {
+            // Sudah di soal terakhir → bisa diarahkan ke hasil
+            session()->flash('message', 'Semua jawaban telah dikumpulkan.');
+            // Contoh redirect (nanti bisa dikustom)
+            // return redirect()->route('score');
         }
     }
 
@@ -32,6 +52,7 @@ class QuizPublicComponent extends Component
     {
         if ($this->currentQuestionIndex > 0) {
             $this->currentQuestionIndex--;
+            $this->selectedOption = $this->answers[$this->questions[$this->currentQuestionIndex]->id] ?? null;
             $this->calculateProgress();
         }
     }
@@ -53,6 +74,6 @@ class QuizPublicComponent extends Component
             'progress' => $this->progress,
             'currentIndex' => $this->currentQuestionIndex + 1,
             'total' => $this->totalQuestions,
-        ]);
+        ])->layout('layout.eduquest');
     }
 }
