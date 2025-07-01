@@ -2,8 +2,9 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
+use Flux\Flux;
 use App\Models\Quiz;
+use Livewire\Component;
 use App\Models\Question;
 
 class QuizDetailComponent extends Component
@@ -20,7 +21,8 @@ class QuizDetailComponent extends Component
                 'id' => $question->id,
                 'question' => $question->question,
                 'type' => $question->type,
-                'options' => $question->type === 'pg' ? json_decode($question->options, true) : [],
+                'options' => $question->type === 'pg' ? $question->options : [],
+                // 'options' => $question->type === 'pg' ? json_decode($question->options, true) : [],
                 'answer_key' => $question->answer_key,
             ];
         }
@@ -80,7 +82,7 @@ class QuizDetailComponent extends Component
             }
         }
 
-        \Flux\Flux::toast(
+        Flux::toast(
             heading: 'Tersimpan',
             text: 'Semua soal berhasil disimpan.',
             variant: 'success'

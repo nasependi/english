@@ -15,9 +15,13 @@
                 $options = is_array($q->options) ? $q->options : json_decode($q->options ?? '{}', true);
                 @endphp
                 <ul class="list-none pl-4 space-y-1">
+                    @if (!empty($options))
                     @foreach ($options as $key => $option)
                     <li><strong>{{ $key }}.</strong> {{ $option }}</li>
                     @endforeach
+                    @else
+                    <li class="text-gray-500">Pilihan belum diisi.</li>
+                    @endif
                 </ul>
             </li>
             @empty

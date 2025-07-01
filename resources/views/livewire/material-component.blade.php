@@ -19,7 +19,7 @@
 
             <flux:table.rows>
                 @foreach ($materials as $material)
-                <flux:table.row :key="$material->id">
+                <flux:table.row :key="$material-> id">
                     <flux:table.cell>{{ $material->title }}</flux:table.cell>
                     <flux:table.cell class="whitespace-normal break-words">
                         {!! $material->description !!}
@@ -33,8 +33,7 @@
                     </flux:table.cell>
                     <flux:table.cell>
                         <flux:button size="sm" wire:click="edit({{ $material->id }})">Edit</flux:button>
-                        <flux:button size="sm" variant="danger" class="ml-2"
-                            wire:click="delete({{ $material->id }})">Delete</flux:button>
+                        <flux:button size="sm" variant="danger" class="ml-2" wire:click="delete({{ $material->id }})">Delete</flux:button>
                     </flux:table.cell>
                 </flux:table.row>
                 @endforeach
