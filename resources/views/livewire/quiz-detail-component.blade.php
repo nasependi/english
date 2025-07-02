@@ -12,16 +12,33 @@
             <li>
                 <div class="mb-1 font-small">{{ $q->question }}</div>
                 @php
-                $options = is_array($q->options) ? $q->options : json_decode($q->options ?? '{}', true);
+                try {
+                $decodedOptions = json_decode($q->options, true);
+                $options = is_array($decodedOptions) ? $decodedOptions : [];
+                } catch (\Throwable $e) {
+                $options = [];
+                }
                 @endphp
                 <ul class="list-none pl-4 space-y-1">
-                    @if (!empty($options))
+                    @if (!empty($options) && is_array($options))
                     @foreach ($options as $key => $option)
-                    <li><strong>{{ $key }}.</strong> {{ $option }}</li>
+                    <li>
+                        <strong
+                            @if($q->answer_key === $key)
+                            @endif
+                            >{{ $key }}.</strong>
+                        {{ $option }}
+
+                        @if($q->answer_key === $key)
+                        <span class="ml-2 text-sm text-green-600 font-semibold">(Jawaban Benar)</span>
+                        @endif
+                    </li>
                     @endforeach
+
                     @else
                     <li class="text-gray-500">Pilihan belum diisi.</li>
                     @endif
+
                 </ul>
             </li>
             @empty
@@ -33,11 +50,17 @@
         <h2 class="text-lg font-semibold mb-2">Soal Essay</h2>
         <ul class="list-decimal pl-5 mb-6 space-y-3">
             @forelse ($quiz->questions->where('type', 'essay') as $q)
-            <li>{{ $q->question }}</li>
+            <li>
+                <div class="mb-1 font-small">{{ $q->question }}</div>
+                @if (!empty($q->answer_key))
+                <div class="text-green-700 text-sm">Jawaban: <span class="font-semibold">{{ $q->answer_key }}</span></div>
+                @endif
+            </li>
             @empty
             <li class="text-gray-500">Belum ada soal essay.</li>
             @endforelse
         </ul>
+
 
 
         {{-- Tambah Soal --}}

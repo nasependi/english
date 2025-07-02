@@ -19,8 +19,15 @@ class QuizPublicComponent extends Component
     {
         $this->questions = Question::where('quiz_id', 1)->get();
         $this->totalQuestions = $this->questions->count();
+
+        if ($this->totalQuestions === 0) {
+            session()->flash('message', 'Soal belum tersedia.');
+            return;
+        }
+
         $this->calculateProgress();
     }
+
 
     public function nextQuestion()
     {

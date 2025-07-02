@@ -21,8 +21,8 @@ class QuizDetailComponent extends Component
                 'id' => $question->id,
                 'question' => $question->question,
                 'type' => $question->type,
-                'options' => $question->type === 'pg' ? $question->options : [],
-                // 'options' => $question->type === 'pg' ? json_decode($question->options, true) : [],
+                // 'options' => $question->type === 'pg' ? $question->options : [],
+                'options' => $question->type === 'pg' ? json_decode($question->options, true) : [],
                 'answer_key' => $question->answer_key,
             ];
         }

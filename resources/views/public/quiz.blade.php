@@ -12,20 +12,25 @@
 	</div>
 
 	<div class="mb-6">
+		@if ($question)
 		<p class="text-slate-800 text-base sm:text-lg font-medium leading-relaxed">
 			{!! $question->question !!}
 		</p>
+		@else
+		<p class="text-red-500">Soal tidak ditemukan.</p>
+		@endif
 	</div>
 
+
 	<div class="space-y-4">
-		@if (in_array($question->question_type, ['multiple_choice', null]) && is_array($question->options))
+		@if ($question && in_array($question->type, ['pg', null]) && is_array(json_decode($question->options ?? '', true)))
 		@foreach ($question->options as $key => $value)
 		<label class="flex items-center gap-x-3 p-4 rounded-lg border border-slate-200 hover:border-[var(--primary-color)] transition-all cursor-pointer">
 			<input type="radio" wire:model="selectedOption" name="option" value="{{ $key }}" class="h-5 w-5 text-[var(--primary-color)]">
 			<span class="text-slate-700 text-base">{{ $value }}</span>
 		</label>
 		@endforeach
-		@elseif ($question->question === 'essay')
+		@elseif ($question && $question->type === 'essay')
 		<textarea wire:model="selectedOption"
 			class="w-full rounded-lg border border-slate-300 focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]"
 			rows="5" placeholder="Tulis jawabanmu di sini..."></textarea>
