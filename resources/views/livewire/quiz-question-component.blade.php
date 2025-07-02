@@ -21,11 +21,7 @@
                     <flux:table.cell class="whitespace-pre-wrap">{{ $q->question }}</flux:table.cell>
                     <flux:table.cell class="uppercase">{{ $q->type }}</flux:table.cell>
                     <flux:table.cell>
-                        @if ($q->type === 'pg')
-                        {{ json_decode($q->answer_key) }}
-                        @else
                         {{ $q->answer_key }}
-                        @endif
                     </flux:table.cell>
                     <flux:table.cell>
                         <flux:button size="sm" wire:click="edit({{ $q->id }})">Edit</flux:button>
@@ -48,7 +44,7 @@
                 <flux:textarea label="Question" wire:model.defer="question" />
                 @error('question') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 
-                <flux:select wire:model="type" label="Question Type">
+                <flux:select wire:model.live="type" label="Question Type">
                     <flux:select.option value="pg">Multiple Choice</flux:select.option>
                     <flux:select.option value="essay">Essay</flux:select.option>
                 </flux:select>
@@ -62,6 +58,7 @@
                         <flux:input wire:model.defer="options.{{ $opt }}" placeholder="Option {{ $opt }}" />
                     </div>
                     @endforeach
+                    @error('options') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 
                     <flux:input label="Correct Answer (A/B/C/D)" wire:model.defer="answer_key" maxlength="1" />
                     @error('answer_key') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror

@@ -40,9 +40,19 @@ class QuizQuestionComponent extends Component
     {
         $this->validate();
 
-        if ($this->type === 'pg' && !in_array($this->answer_key, ['A', 'B', 'C', 'D', 'E'])) {
-            $this->addError('answer_key', 'Kunci jawaban harus A, B, C, D, atau E.');
-            return;
+        // Validasi khusus untuk pilihan ganda
+        if ($this->type === 'pg') {
+            // Pastikan semua opsi terisi
+            if (empty($this->options['A']) || empty($this->options['B']) || 
+                empty($this->options['C']) || empty($this->options['D'])) {
+                $this->addError('options', 'Semua opsi (A, B, C, D) harus diisi.');
+                return;
+            }
+            
+            if (!in_array($this->answer_key, ['A', 'B', 'C', 'D'])) {
+                $this->addError('answer_key', 'Kunci jawaban harus A, B, C, atau D.');
+                return;
+            }
         }
 
         Question::create([
@@ -70,8 +80,15 @@ class QuizQuestionComponent extends Component
         $this->editId = $q->id;
         $this->question = $q->question;
         $this->type = $q->type;
-        $this->options = $q->type === 'pg' ? json_decode($q->options, true) : [];
-        $this->answer_key = $q->type === 'pg' ? json_decode($q->answer_key, true) : $q->answer_key;
+        
+        if ($q->type === 'pg' && $q->options) {
+            $decodedOptions = json_decode($q->options, true);
+            $this->options = is_array($decodedOptions) ? $decodedOptions : [];
+        } else {
+            $this->options = [];
+        }
+        
+        $this->answer_key = $q->answer_key ?? '';
         $this->showModal = true;
     }
 
@@ -79,15 +96,37 @@ class QuizQuestionComponent extends Component
     {
         $this->validate();
 
+        // Validasi khusus untuk pilihan ganda
+        if ($this->type === 'pg') {
+            // Pastikan semua opsi terisi
+            if (empty($this->options['A']) || empty($this->options['B']) || 
+                empty($this->options['C']) || empty($this->options['D'])) {
+                $this->addError('options', 'Semua opsi (A, B, C, D) harus diisi.');
+                return;
+            }
+            
+            if (!in_array($this->answer_key, ['A', 'B', 'C', 'D'])) {
+                $this->addError('answer_key', 'Kunci jawaban harus A, B, C, atau D.');
+                return;
+            }
+        }
+
         $q = Question::findOrFail($this->editId);
         $q->update([
             'question' => $this->question,
             'type' => $this->type,
             'options' => $this->type === 'pg' ? json_encode($this->options) : null,
-            'answer_key' => $this->type === 'pg' ? json_encode($this->answer_key) : $this->answer_key,
+            'answer_key' => $this->answer_key,
         ]);
 
         $this->closeModal();
+        $this->resetForm();
+        
+        \Flux\Flux::toast(
+            variant: 'success',
+            heading: 'Updated',
+            text: 'Question successfully updated.'
+        );
     }
 
     public function delete($id)
@@ -100,7 +139,18 @@ class QuizQuestionComponent extends Component
         $this->editId = null;
         $this->question = '';
         $this->type = 'pg';
-        $this->options = [];
+        $this->options = ['A' => '', 'B' => '', 'C' => '', 'D' => ''];
         $this->answer_key = '';
+    }
+    
+    public function updatedType()
+    {
+        if ($this->type === 'pg') {
+            $this->options = ['A' => '', 'B' => '', 'C' => '', 'D' => ''];
+            $this->answer_key = '';
+        } else {
+            $this->options = [];
+            $this->answer_key = '';
+        }
     }
 }

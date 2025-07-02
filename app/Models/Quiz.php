@@ -14,10 +14,11 @@ class Quiz extends Model
         'id'
     ];
 
-    public function user()
+    public function teacher()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'teacher_id');
     }
+    
     public function questions()
     {
         return $this->hasMany(Question::class);

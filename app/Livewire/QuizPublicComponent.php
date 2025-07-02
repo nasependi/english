@@ -15,9 +15,26 @@ class QuizPublicComponent extends Component
     public $selectedOption = null;
     public $answers = [];
 
-    public function mount()
+    public function mount($quizId = null)
     {
-        $this->questions = Question::where('quiz_id', 1)->get();
+        // Jika quiz ID tidak diberikan, ambil quiz pertama yang tersedia
+        if ($quizId) {
+            $quiz = \App\Models\Quiz::with('questions')->find($quizId);
+            if (!$quiz) {
+                session()->flash('error', 'Quiz tidak ditemukan.');
+                return redirect()->route('quiz.public');
+            }
+            $this->questions = $quiz->questions;
+        } else {
+            // Ambil quiz pertama yang memiliki soal
+            $firstQuiz = \App\Models\Quiz::whereHas('questions')->with('questions')->first();
+            if ($firstQuiz) {
+                $this->questions = $firstQuiz->questions;
+            } else {
+                $this->questions = collect([]);
+            }
+        }
+        
         $this->totalQuestions = $this->questions->count();
 
         if ($this->totalQuestions === 0) {
@@ -26,6 +43,11 @@ class QuizPublicComponent extends Component
         }
 
         $this->calculateProgress();
+        
+        // Load jawaban yang sudah disimpan jika ada
+        if (isset($this->questions[0])) {
+            $this->selectedOption = $this->answers[$this->questions[0]->id] ?? null;
+        }
     }
 
 
@@ -57,8 +79,14 @@ class QuizPublicComponent extends Component
 
     public function previousQuestion()
     {
+        // Simpan jawaban saat ini sebelum pindah
+        if (!is_null($this->selectedOption)) {
+            $this->answers[$this->questions[$this->currentQuestionIndex]->id] = $this->selectedOption;
+        }
+        
         if ($this->currentQuestionIndex > 0) {
             $this->currentQuestionIndex--;
+            // Load jawaban yang sudah disimpan sebelumnya
             $this->selectedOption = $this->answers[$this->questions[$this->currentQuestionIndex]->id] ?? null;
             $this->calculateProgress();
         }
@@ -73,6 +101,39 @@ class QuizPublicComponent extends Component
         }
     }
 
+    public function finishQuiz()
+    {
+        // Simpan jawaban terakhir jika ada
+        if (!is_null($this->selectedOption)) {
+            $this->answers[$this->questions[$this->currentQuestionIndex]->id] = $this->selectedOption;
+        }
+
+        // Hitung skor (opsional)
+        $score = 0;
+        $totalQuestions = 0;
+        
+        foreach ($this->questions as $question) {
+            $totalQuestions++;
+            $userAnswer = $this->answers[$question->id] ?? null;
+            
+            if ($question->type === 'pg' && $userAnswer === $question->answer_key) {
+                $score++;
+            }
+            // Untuk essay, bisa ditambahkan logika penilaian manual
+        }
+
+        // Simpan hasil ke session atau database
+        session()->flash('quiz_result', [
+            'score' => $score,
+            'total' => $totalQuestions,
+            'percentage' => $totalQuestions > 0 ? round(($score / $totalQuestions) * 100, 2) : 0,
+            'answers' => $this->answers
+        ]);
+
+        // Redirect ke halaman hasil
+        return redirect()->route('score');
+    }
+    
     public function render()
     {
         $currentQuestion = $this->questions[$this->currentQuestionIndex] ?? null;

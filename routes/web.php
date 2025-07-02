@@ -12,6 +12,7 @@ use App\Livewire\QuizDetailComponent;
 use App\Livewire\SubmissionComponent;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\DescriptionComponent;
+use App\Livewire\QuizListComponent;
 use App\Livewire\QuizPublicComponent;
 
 Route::get('/', function () {
@@ -22,7 +23,8 @@ Route::get('/', function () {
 Route::get('/chapter', ChapterComponent::class)->name('chapter');
 Route::get('/chapter/{id}', DescriptionComponent::class)->name('description');
 Route::view('/', 'public.landing-page')->name('home');
-Route::get('/quiz-public', QuizPublicComponent::class)->name('quiz.public');
+Route::get('/quiz-public', QuizListComponent::class)->name('quiz.public');
+Route::get('/quiz-public/{quizId?}', QuizPublicComponent::class)->name('quiz.take');
 
 Route::get('/score', function () {
     return view('public.score');

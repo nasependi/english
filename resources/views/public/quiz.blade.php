@@ -23,19 +23,31 @@
 
 
 	<div class="space-y-4">
-		@if ($question && in_array($question->type, ['pg', null]) && is_array(json_decode($question->options ?? '', true)))
-		@foreach ($question->options as $key => $value)
-		<label class="flex items-center gap-x-3 p-4 rounded-lg border border-slate-200 hover:border-[var(--primary-color)] transition-all cursor-pointer">
-			<input type="radio" wire:model="selectedOption" name="option" value="{{ $key }}" class="h-5 w-5 text-[var(--primary-color)]">
-			<span class="text-slate-700 text-base">{{ $value }}</span>
-		</label>
-		@endforeach
+		@if ($question && $question->type === 'pg')
+			@php
+				$options = [];
+				if ($question->options) {
+					$decodedOptions = json_decode($question->options, true);
+					$options = is_array($decodedOptions) ? $decodedOptions : [];
+				}
+			@endphp
+			
+			@if (!empty($options))
+				@foreach ($options as $key => $value)
+				<label class="flex items-center gap-x-3 p-4 rounded-lg border border-slate-200 hover:border-[var(--primary-color)] transition-all cursor-pointer">
+					<input type="radio" wire:model="selectedOption" name="option" value="{{ $key }}" class="h-5 w-5 text-[var(--primary-color)]">
+					<span class="text-slate-700 text-base">{{ $value }}</span>
+				</label>
+				@endforeach
+			@else
+				<p class="text-red-500 text-sm">Pilihan jawaban tidak tersedia.</p>
+			@endif
 		@elseif ($question && $question->type === 'essay')
 		<textarea wire:model="selectedOption"
 			class="w-full rounded-lg border border-slate-300 focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]"
 			rows="5" placeholder="Tulis jawabanmu di sini..."></textarea>
 		@else
-		<p class="text-red-500 text-sm">Pilihan jawaban tidak tersedia.</p>
+		<p class="text-red-500 text-sm">Tipe soal tidak dikenali.</p>
 		@endif
 	</div>
 
@@ -47,14 +59,23 @@
 	@endif
 
 	<div class="mt-8 flex justify-between items-center">
-		<button wire:click="previousQuestion" class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-slate-200 text-slate-700 text-sm font-bold hover:bg-slate-300">
+		<button wire:click="previousQuestion" 
+			@if($currentIndex == 1) disabled @endif
+			class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-slate-200 text-slate-700 text-sm font-bold hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed">
 			<i class="material-icons text-lg">arrow_back</i>
 			<span>Sebelumnya</span>
 		</button>
 
+		@if($currentIndex == $total)
+		<button wire:click="finishQuiz" class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-green-600 text-white text-sm font-bold hover:bg-green-700">
+			<span>Selesai</span>
+			<i class="material-icons text-lg">check</i>
+		</button>
+		@else
 		<button wire:click="nextQuestion" class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-[var(--primary-color)] text-white text-sm font-bold hover:bg-blue-600">
 			<span>Berikutnya</span>
 			<i class="material-icons text-lg">arrow_forward</i>
 		</button>
+		@endif
 	</div>
 </div>

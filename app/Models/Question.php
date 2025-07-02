@@ -12,7 +12,6 @@ class Question extends Model
 
     protected $casts = [
         'options' => 'array', // Assuming options are stored as JSON
-        'answer_key' => 'array', // Assuming answer_key is also stored as JSON
     ];
 
     protected $guarded = [
