@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\DescriptionComponent;
 use App\Livewire\QuizListComponent;
 use App\Livewire\QuizPublicComponent;
+use App\Livewire\ScoreComponent;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,9 +27,7 @@ Route::view('/', 'public.landing-page')->name('home');
 Route::get('/quiz-public', QuizListComponent::class)->name('quiz.public');
 Route::get('/quiz-public/{quizId?}', QuizPublicComponent::class)->name('quiz.take');
 
-Route::get('/score', function () {
-    return view('public.score');
-})->name('score');
+Route::get('/score', ScoreComponent::class)->name('score');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

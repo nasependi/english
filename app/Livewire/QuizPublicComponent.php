@@ -4,6 +4,9 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Question;
+use App\Models\Quiz;
+use App\Models\QuizResult;
+use Illuminate\Support\Facades\Auth;
 
 class QuizPublicComponent extends Component
 {
@@ -11,6 +14,8 @@ class QuizPublicComponent extends Component
     public $currentQuestionIndex = 0;
     public $totalQuestions;
     public $progress = 0;
+    public $quizId;
+    public $quiz;
 
     public $selectedOption = null;
     public $answers = [];
@@ -19,17 +24,19 @@ class QuizPublicComponent extends Component
     {
         // Jika quiz ID tidak diberikan, ambil quiz pertama yang tersedia
         if ($quizId) {
-            $quiz = \App\Models\Quiz::with('questions')->find($quizId);
-            if (!$quiz) {
+            $this->quiz = Quiz::with('questions')->find($quizId);
+            if (!$this->quiz) {
                 session()->flash('error', 'Quiz tidak ditemukan.');
                 return redirect()->route('quiz.public');
             }
-            $this->questions = $quiz->questions;
+            $this->quizId = $quizId;
+            $this->questions = $this->quiz->questions;
         } else {
             // Ambil quiz pertama yang memiliki soal
-            $firstQuiz = \App\Models\Quiz::whereHas('questions')->with('questions')->first();
-            if ($firstQuiz) {
-                $this->questions = $firstQuiz->questions;
+            $this->quiz = Quiz::whereHas('questions')->with('questions')->first();
+            if ($this->quiz) {
+                $this->quizId = $this->quiz->id;
+                $this->questions = $this->quiz->questions;
             } else {
                 $this->questions = collect([]);
             }
@@ -108,7 +115,7 @@ class QuizPublicComponent extends Component
             $this->answers[$this->questions[$this->currentQuestionIndex]->id] = $this->selectedOption;
         }
 
-        // Hitung skor (opsional)
+        // Hitung skor
         $score = 0;
         $totalQuestions = 0;
         
@@ -122,12 +129,29 @@ class QuizPublicComponent extends Component
             // Untuk essay, bisa ditambahkan logika penilaian manual
         }
 
-        // Simpan hasil ke session atau database
+        $percentage = $totalQuestions > 0 ? round(($score / $totalQuestions) * 100, 2) : 0;
+
+        // Simpan hasil ke database
+        $quizResult = QuizResult::create([
+            'quiz_id' => $this->quizId,
+            'user_id' => Auth::id(), // null jika guest
+            'session_id' => Auth::guest() ? session()->getId() : null,
+            'score' => $score,
+            'total_questions' => $totalQuestions,
+            'percentage' => $percentage,
+            'answers' => $this->answers,
+            'completed_at' => now(),
+        ]);
+
+        // Simpan hasil ke session untuk ditampilkan
         session()->flash('quiz_result', [
+            'id' => $quizResult->id,
+            'quiz_title' => $this->quiz->title,
             'score' => $score,
             'total' => $totalQuestions,
-            'percentage' => $totalQuestions > 0 ? round(($score / $totalQuestions) * 100, 2) : 0,
-            'answers' => $this->answers
+            'percentage' => $percentage,
+            'answers' => $this->answers,
+            'quiz_id' => $this->quizId,
         ]);
 
         // Redirect ke halaman hasil
