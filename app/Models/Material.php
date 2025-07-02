@@ -19,4 +19,8 @@ class Material extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function assignments()
+    {
+        return $this->hasMany(\App\Models\Assignment::class, 'material_id');
+    }
 }

@@ -30,14 +30,23 @@
 									{{ $chapter->title }}
 								</h2>
 								<p class="text-sm text-[var(--text-secondary)]">
-									{{ $chapter->subtitle ?? 'Chapter ' . $chapter->id }}
+									<!-- {{ $chapter->subtitle ?? 'Chapter ' . $chapter->id }} -->
 								</p>
 							</div>
 						</div>
 
-						<p class="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-3">
-							Deskripsi: {{ $chapter->description }}
+						<p class="text-sm text-[var(--text-secondary)] leading-relaxed" x-data="{ showFull: false }">
+							<span x-show="!showFull">
+								{!! Str::limit(strip_tags($chapter->description), 500) !!}
+								<span class="text-blue-600 cursor-pointer underline" @click="showFull = true">Selengkapnya</span>
+							</span>
+
+							<span x-show="showFull" x-cloak>
+								{!! strip_tags($chapter->description) !!}
+								<span class="text-blue-600 cursor-pointer underline" @click="showFull = false">Sembunyikan</span>
+							</span>
 						</p>
+
 
 						<div class="mt-4 text-right">
 							<span class="inline-flex items-center text-sm font-medium text-[var(--primary-color)] group-hover:underline">

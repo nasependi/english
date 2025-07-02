@@ -100,7 +100,7 @@
                         <flux:button variant="ghost">Cancel</flux:button>
                     </flux:modal.close>
 
-                    <flux:button type="button" variant="danger" wire:click="delete">Save</flux:button>
+                    <flux:button type="button" variant="danger" wire:click="delete">Delete</flux:button>
                 </div>
             </div>
         </flux:modal>

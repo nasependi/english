@@ -24,24 +24,24 @@
 
 	<div class="space-y-4">
 		@if ($question && $question->type === 'pg')
-			@php
-				$options = [];
-				if ($question->options) {
-					$decodedOptions = json_decode($question->options, true);
-					$options = is_array($decodedOptions) ? $decodedOptions : [];
-				}
-			@endphp
-			
-			@if (!empty($options))
-				@foreach ($options as $key => $value)
-				<label class="flex items-center gap-x-3 p-4 rounded-lg border border-slate-200 hover:border-[var(--primary-color)] transition-all cursor-pointer">
-					<input type="radio" wire:model="selectedOption" name="option" value="{{ $key }}" class="h-5 w-5 text-[var(--primary-color)]">
-					<span class="text-slate-700 text-base">{{ $value }}</span>
-				</label>
-				@endforeach
-			@else
-				<p class="text-red-500 text-sm">Pilihan jawaban tidak tersedia.</p>
-			@endif
+		@php
+		$options = [];
+		if ($question->options) {
+		$decodedOptions = json_decode($question->options, true);
+		$options = is_array($decodedOptions) ? $decodedOptions : [];
+		}
+		@endphp
+
+		@if (!empty($options))
+		@foreach ($options as $key => $value)
+		<label class="flex items-center gap-x-3 p-4 rounded-lg border border-slate-200 hover:border-[var(--primary-color)] transition-all cursor-pointer">
+			<input type="radio" wire:model="selectedOption" name="option" value="{{ $key }}" class="h-5 w-5 text-[var(--primary-color)]">
+			<span class="text-slate-700 text-base">{{ $value }}</span>
+		</label>
+		@endforeach
+		@else
+		<p class="text-red-500 text-sm">Pilihan jawaban tidak tersedia.</p>
+		@endif
 		@elseif ($question && $question->type === 'essay')
 		<textarea wire:model="selectedOption"
 			class="w-full rounded-lg border border-slate-300 focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]"
@@ -59,8 +59,8 @@
 	@endif
 
 	<div class="mt-8 flex justify-between items-center">
-		<button wire:click="previousQuestion" 
-			@if($currentIndex == 1) disabled @endif
+		<button wire:click="previousQuestion"
+			@if($currentIndex==1) disabled @endif
 			class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-slate-200 text-slate-700 text-sm font-bold hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed">
 			<i class="material-icons text-lg">arrow_back</i>
 			<span>Sebelumnya</span>

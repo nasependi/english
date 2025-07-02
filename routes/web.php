@@ -26,6 +26,8 @@ Route::get('/chapter/{id}', DescriptionComponent::class)->name('description');
 Route::view('/', 'public.landing-page')->name('home');
 Route::get('/quiz-public', QuizListComponent::class)->name('quiz.public');
 Route::get('/quiz-public/{quizId?}', QuizPublicComponent::class)->name('quiz.take');
+Route::get('/assignment/chapter/{id}', \App\Livewire\AssignmentListByChapter::class)->name('assignment.chapter');
+
 
 Route::get('/score', ScoreComponent::class)->name('score');
 
